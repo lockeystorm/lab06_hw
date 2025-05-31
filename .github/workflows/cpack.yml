@@ -34,8 +34,8 @@ jobs:
           files: |
             build/*.deb 
             build/*.rpm
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
   windows:
     runs-on: windows-latest
@@ -61,8 +61,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build/*.msi
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   macos:
     runs-on: macos-latest
@@ -88,5 +88,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build/*.dmg
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
