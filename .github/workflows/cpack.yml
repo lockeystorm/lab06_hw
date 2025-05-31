@@ -1,8 +1,13 @@
 name: Package Actions
+
 on: 
     push:
         tags: 
           - 'v*'
+
+    permissions:
+        contents: write
+        
 jobs:
     linux:
         runs-on: ubuntu-latest
@@ -25,12 +30,11 @@ jobs:
               run:
                 cmake --build build --target package
                 
-            - name: Upload artifacts
-              uses: actions/upload-artifact@v4
+            - name: Create release
+              uses: softprops/action-gh-release@v1
               with:
-                name: solver-linux
                 files: |
-                  build/*.deb
+                  build/*.deb 
                   build/*.rpm
             
     windows:
@@ -54,11 +58,12 @@ jobs:
                 cd build
                 cpack -G WIX -C Release
                 
-            - name: Upload artifacts
-              uses: actions/upload-artifact@v4
+            - name: Create release
+              uses: softprops/action-gh-release@v1
               with:
-                name: solver-windows
-                files: build/*.msi
+                files: |
+                  build/*.deb 
+                  build/*.rpm
     macos:
         runs-on: macos-latest
         steps:
@@ -80,9 +85,10 @@ jobs:
                 cd build
                 cpack -G DragNDrop
                 
-            - name: Upload artifacts
-              uses: actions/upload-artifact@v4
+            - name: Create release
+              uses: softprops/action-gh-release@v1
               with:
-                name: solver-macos
-                files: build/*.dmg
+                files: |
+                  build/*.deb 
+                  build/*.rpm
             
