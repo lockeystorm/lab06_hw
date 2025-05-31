@@ -1,0 +1,88 @@
+name: Package Actions
+on: 
+    push:
+        tags: 
+          - 'v*'
+jobs:
+    linux:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            
+            - name: Install tools
+              run: |
+                sudo apt-get update && sudo apt-get install -y rpm
+                
+            - name: Configure
+              run: |
+                cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCPACK_GENERATOR="DEB;RPM"
+                
+            - name: Build
+              run: 
+                cmake --build build --config Release
+                
+            - name: Package
+              run:
+                cmake --build build --target package
+                
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: solver-linux
+                files: |
+                  build/*.deb
+                  build/*.rpm
+            
+    windows:
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v4
+            
+            - name: Setup CMake
+              uses: actions/setup-cmake@v3
+            
+            - name: Configure
+              run: |
+                cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCPACK_GENERATOR="WIX"
+                
+            - name: Build
+              run: 
+                cmake --build build --config Release
+                
+            - name: Package
+              run: |
+                cd build
+                cpack -G WIX -C Release
+                
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: solver-windows
+                files: build/*.msi
+    macos:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v4
+            
+            - name: Setup CMake
+              uses: actions/setup-cmake@v3
+            
+            - name: Configure
+              run: |
+                cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCPACK_GENERATOR="DragNDrop"
+                
+            - name: Build
+              run: 
+                cmake --build build --config Release
+                
+            - name: Package
+              run: |
+                cd build
+                cpack -G DragNDrop
+                
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: solver-macos
+                files: build/*.dmg
+            

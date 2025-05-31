@@ -16,6 +16,20 @@ add_subdirectory(formatter_ex_lib)
 add_subdirectory(solver_lib)
 add_subdirectory(solver_application)
 
+install(TARGETS formatter formatter_ex solver_lib
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    INCLUDES DESTINATION include
+)
+
+install(DIRECTORY 
+    formatter_lib/
+    formatter_ex_lib/
+    solver_lib/
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h"
+)
+
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_PACKAGE_NAME "solver")
@@ -36,6 +50,7 @@ elseif(UNIX)
 endif()
 
 # Linux (DEB/RPM)
+set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "owner")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.14), libstdc++6 (>= 4.8.1)")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
